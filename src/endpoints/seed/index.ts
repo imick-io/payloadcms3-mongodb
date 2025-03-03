@@ -10,6 +10,7 @@ import { postX } from './post-x'
 import { post1 } from './post-1'
 import { post2 } from './post-2'
 import { post3 } from './post-3'
+import { Post } from '@/payload-types'
 
 const collections: CollectionSlug[] = [
   'categories',
@@ -260,20 +261,24 @@ export const seed = async ({
   })
 
   // Extra 100 posts for Mongodb connection testing
+  const postsPromises = [] as Promise<Post>[]
+
   for (let i = 0; i < 100; i++) {
-    await payload.create({
-      collection: 'posts',
-      depth: 0,
-      context: {
-        disableRevalidate: true,
-      },
-      data: postX({
-        slug: `${Math.random().toString(36).substring(7)}-${i}`,
-        heroImage: image1Doc,
-        blockImage: image2Doc,
-        author: demoAuthor,
+    postsPromises.push(
+      payload.create({
+        collection: 'posts',
+        depth: 0,
+        context: {
+          disableRevalidate: true,
+        },
+        data: postX({
+          slug: `${Math.random().toString(36).substring(7)}-${i}`,
+          heroImage: image1Doc,
+          blockImage: image2Doc,
+          author: demoAuthor,
+        }),
       }),
-    })
+    )
   }
 
   // update each post with related posts
