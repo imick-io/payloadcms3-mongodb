@@ -7,6 +7,8 @@ import {
 } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { v4 as uuidv4 } from 'uuid'
+import { extension } from 'mime-types'
 
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
@@ -38,6 +40,15 @@ export const Media: CollectionConfig = {
       }),
     },
   ],
+  hooks: {
+    beforeOperation: [
+      ({ req, operation }) => {
+        if ((operation === 'create' || operation === 'update') && req.file) {
+          req.file.name = `${uuidv4()}.${extension(req.file.mimetype) || 'jpg'}`
+        }
+      },
+    ],
+  },
   upload: {
     // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
     staticDir: path.resolve(dirname, '../../public/media'),
