@@ -6,6 +6,7 @@ import { home } from './home'
 import { image1 } from './image-1'
 import { image2 } from './image-2'
 import { imageHero1 } from './image-hero-1'
+import { postX } from './post-x'
 import { post1 } from './post-1'
 import { post2 } from './post-2'
 import { post3 } from './post-3'
@@ -258,6 +259,23 @@ export const seed = async ({
     data: post3({ heroImage: image3Doc, blockImage: image1Doc, author: demoAuthor }),
   })
 
+  // Extra 100 posts for Mongodb connection testing
+  for (let i = 0; i < 100; i++) {
+    await payload.create({
+      collection: 'posts',
+      depth: 0,
+      context: {
+        disableRevalidate: true,
+      },
+      data: postX({
+        slug: `${Math.random().toString(36).substring(7)}-${i}`,
+        heroImage: image1Doc,
+        blockImage: image2Doc,
+        author: demoAuthor,
+      }),
+    })
+  }
+
   // update each post with related posts
   await payload.update({
     id: post1Doc.id,
@@ -301,7 +319,7 @@ export const seed = async ({
     payload.create({
       collection: 'pages',
       depth: 0,
-      data: home({heroImage: imageHomeDoc, metaImage: image2Doc}),
+      data: home({ heroImage: imageHomeDoc, metaImage: image2Doc }),
     }),
     payload.create({
       collection: 'pages',
