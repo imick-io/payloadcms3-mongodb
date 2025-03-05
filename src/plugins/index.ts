@@ -93,9 +93,7 @@ export const plugins: Plugin[] = [
   }),
   uploadthingStorage({
     collections: {
-      media: {
-        disablePayloadAccessControl: true,
-      },
+      media: true,
     },
     options: {
       token: process.env.UPLOADTHING_TOKEN,
