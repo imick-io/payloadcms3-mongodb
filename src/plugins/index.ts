@@ -1,4 +1,4 @@
-import { s3Storage } from '@payloadcms/storage-s3'
+import { uploadthingStorage } from '@payloadcms/storage-uploadthing'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
@@ -91,17 +91,14 @@ export const plugins: Plugin[] = [
       },
     },
   }),
-  s3Storage({
+  uploadthingStorage({
     collections: {
-      [Media.slug]: true,
+      media: true,
     },
-    bucket: process.env.S3_BUCKET!,
-    config: {
-      credentials: {
-        accessKeyId: process.env.S3_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
-      },
-      region: process.env.S3_REGION,
+    options: {
+      token: process.env.UPLOADTHING_TOKEN,
+      acl: 'public-read',
     },
+    clientUploads: true,
   }),
 ]
